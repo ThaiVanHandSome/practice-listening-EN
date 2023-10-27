@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/app-name/practice-listening-EN/static/css/main.b2d45814.css",
-    "main.js": "/app-name/practice-listening-EN/static/js/main.d3995620.js",
-    "static/js/787.aeb39de0.chunk.js": "/app-name/practice-listening-EN/static/js/787.aeb39de0.chunk.js",
-    "index.html": "/app-name/practice-listening-EN/index.html",
-    "main.b2d45814.css.map": "/app-name/practice-listening-EN/static/css/main.b2d45814.css.map",
-    "main.d3995620.js.map": "/app-name/practice-listening-EN/static/js/main.d3995620.js.map",
-    "787.aeb39de0.chunk.js.map": "/app-name/practice-listening-EN/static/js/787.aeb39de0.chunk.js.map"
+    "main.css": "/practice-listening-EN/static/css/main.b2d45814.css",
+    "main.js": "/practice-listening-EN/static/js/main.0bb9600c.js",
+    "static/js/787.aeb39de0.chunk.js": "/practice-listening-EN/static/js/787.aeb39de0.chunk.js",
+    "index.html": "/practice-listening-EN/index.html",
+    "main.b2d45814.css.map": "/practice-listening-EN/static/css/main.b2d45814.css.map",
+    "main.0bb9600c.js.map": "/practice-listening-EN/static/js/main.0bb9600c.js.map",
+    "787.aeb39de0.chunk.js.map": "/practice-listening-EN/static/js/787.aeb39de0.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.b2d45814.css",
-    "static/js/main.d3995620.js"
+    "static/js/main.0bb9600c.js"
   ]
 }
