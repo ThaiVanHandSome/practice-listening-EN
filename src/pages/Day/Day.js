@@ -6,13 +6,14 @@ import styles from './Day.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
 import randomSort from '~/utils/shuffle';
-import { Collapse, Button, CardBody, Card } from 'reactstrap';
+import { Collapse, CardBody, Card } from 'reactstrap';
 import routes from '~/config/routes';
 
 const cx = classNames.bind(styles);
 
 function Day() {
     const words = useSelector((state) => state.wordsReducer);
+    console.log(words);
 
     const [indexQuestion, setIndexQuestion] = useState(0);
     const [voice, setVoice] = useState(null);
@@ -28,9 +29,9 @@ function Day() {
     const id = params.get('id');
     const currWords = words[id];
     const listEnWords = useMemo(() => {
-        const list = Object.keys(words[id]);
+        const list = Object.keys(currWords);
         return list.sort(randomSort);
-    }, [words[id]]);
+    }, [currWords]);
     const [isPaused, setIsPaused] = useState(false);
     const [utterance, setUtterance] = useState(null);
 

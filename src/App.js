@@ -4,7 +4,7 @@ import { publicRoutes } from './routes';
 function App() {
     return (
         <main className="app">
-            <BrowserRouter>
+            <BrowserRouter basename="/practice-listening-EN">
                 <Routes>
                     {publicRoutes.map((item, index) => (
                         <Route key={index} path={item.path} element={<item.Component />} />
