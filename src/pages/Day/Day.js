@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import styles from './Day.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -66,6 +65,7 @@ function Day() {
             synth.resume();
         } else {
             utterance.voice = voice;
+            utterance.rate = 1.2;
             synth.speak(utterance);
         }
 
@@ -85,6 +85,7 @@ function Day() {
     const handleNextQuestion = () => {
         setShowAnswer(false);
         setCanShowAnswer(false);
+        setIsOpen(false);
         setIndexQuestion((prev) => {
             if (prev !== listEnWords.length - 1) {
                 return prev + 1;
@@ -96,6 +97,7 @@ function Day() {
     const handlePrevQuestion = () => {
         setShowAnswer(false);
         setCanShowAnswer(false);
+        setIsOpen(false);
         setIndexQuestion((prev) => {
             if (prev !== 0) {
                 return prev - 1;
