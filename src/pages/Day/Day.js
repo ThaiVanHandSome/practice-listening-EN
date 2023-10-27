@@ -112,7 +112,7 @@ function Day() {
         <div className={cx('wrapper')}>
             {!!words && (
                 <>
-                    <div className={cx('container', 'p-4')}>
+                    <div className={cx('container', 'p-4', 'w-lg-75')}>
                         <div
                             className={cx(
                                 'info d-flex align-items-center justify-content-center flex-column d-lg-block',
@@ -149,7 +149,7 @@ function Day() {
                         )}
                         {!complete && showAnswer && (
                             <div className={cx('answer-container')}>
-                                <h1 className="mb-3" style={{ fontSize: '5rem' }}>
+                                <h1 className="mb-3" style={{ fontSize: '5rem', textAlign: 'center' }}>
                                     {listEnWords[indexQuestion]}
                                 </h1>
                                 <button className={cx('btn')} onClick={toggle}>
@@ -158,7 +158,7 @@ function Day() {
                                 <Collapse isOpen={isOpen}>
                                     <Card>
                                         <CardBody>
-                                            <h1 style={{ fontSize: '2.2rem', opacity: '0.5' }}>
+                                            <h1 style={{ fontSize: '2.2rem', opacity: '0.5', textAlign: 'center' }}>
                                                 {currWords[listEnWords[indexQuestion]]}
                                             </h1>
                                         </CardBody>
@@ -181,9 +181,6 @@ function Day() {
                         )}
                     </div>
                     <div className={cx('list-btn', 'flex-column', 'flex-lg-row')}>
-                        <Link className={cx('btn', 'me-lg-4')} to={routes.home}>
-                            Back To Home
-                        </Link>
                         <button
                             className={cx('btn', 'me-lg-4', {
                                 disable: !canShowAnswer,
@@ -192,12 +189,16 @@ function Day() {
                         >
                             Show Answer
                         </button>
-                        <button className={cx('btn', 'me-lg-4')} onClick={handlePrevQuestion}>
-                            Previous Question
-                        </button>
                         <button className={cx('btn', 'me-lg-4')} onClick={handleNextQuestion}>
                             Next Question
                         </button>
+
+                        <button className={cx('btn', 'me-lg-4')} onClick={handlePrevQuestion}>
+                            Previous Question
+                        </button>
+                        <Link className={cx('btn', 'me-lg-4')} to={routes.home}>
+                            Back To Home
+                        </Link>
                     </div>
                 </>
             )}

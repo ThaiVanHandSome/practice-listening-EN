@@ -11,7 +11,8 @@
 
 .container {
     position: relative;
-    width: 70%;
+    width: 90%;
+    margin-top: 12px;
     min-height: 70vh;
     background-color: #fff;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -154,7 +155,7 @@
     align-items: center;
     justify-self: center;
     flex-direction: column;
-    
+
     h1 {
         font-size: 6rem;
         margin-bottom: 24px;
