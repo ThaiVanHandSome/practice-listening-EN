@@ -1,6 +1,6 @@
 const routes = {
     home: '/',
-    day: '/:id',
+    day: '/day/:id',
 };
 
 export default routes;

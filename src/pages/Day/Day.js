@@ -13,7 +13,6 @@ const cx = classNames.bind(styles);
 
 function Day() {
     const words = useSelector((state) => state.wordsReducer);
-    console.log(words);
 
     const [indexQuestion, setIndexQuestion] = useState(0);
     const [voice, setVoice] = useState(null);
