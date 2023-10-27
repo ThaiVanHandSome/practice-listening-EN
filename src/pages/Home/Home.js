@@ -10,7 +10,7 @@ function Home() {
         <div className={cx('wrapper')}>
             <div className={cx('container')}>
                 {words.map((_, index) => (
-                    <Link className={cx('btn')} key={index} to={`/day?id=${index}`}>
+                    <Link className={cx('btn')} key={index} to={`/day/${index}`}>
                         Day {index + 1}
                     </Link>
                 ))}

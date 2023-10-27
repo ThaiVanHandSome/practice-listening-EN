@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import styles from './Day.module.scss';
@@ -23,9 +23,7 @@ function Day() {
 
     const toggle = () => setIsOpen(!isOpen);
 
-    const location = useLocation();
-    const params = new URLSearchParams(location.search);
-    const id = params.get('id');
+    const { id } = useParams();
     const currWords = words[id];
     const listEnWords = useMemo(() => {
         const list = Object.keys(currWords);
