@@ -8,11 +8,13 @@ import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
 import randomSort from '~/utils/shuffle';
 import { Collapse, CardBody, Card } from 'reactstrap';
 import routes from '~/config/routes';
+import getData from '~/data/vocabularySource';
+import { Spinner } from 'reactstrap';
 
 const cx = classNames.bind(styles);
 
 function Day() {
-    const words = useSelector((state) => state.wordsReducer);
+    const [words, setWords] = useState(null);
 
     const [indexQuestion, setIndexQuestion] = useState(0);
     const [voice, setVoice] = useState(null);
@@ -23,8 +25,12 @@ function Day() {
 
     const toggle = () => setIsOpen(!isOpen);
 
-    const { id } = useParams();
-    const currWords = words[id];
+    let { id } = useParams();
+    let currWords = {};
+    if (words !== null) {
+        currWords = words[id];
+    }
+    console.log(currWords);
     const listEnWords = useMemo(() => {
         const list = Object.keys(currWords);
         return list.sort(randomSort);
@@ -44,6 +50,14 @@ function Day() {
             synth.cancel();
         };
     }, [listEnWords[indexQuestion]]);
+
+    useEffect(() => {
+        const getVocabulary = async () => {
+            const data = await getData();
+            setWords(data);
+        };
+        getVocabulary();
+    }, []);
 
     const handlePlay = () => {
         const synth = window.speechSynthesis;
@@ -96,85 +110,102 @@ function Day() {
 
     return (
         <div className={cx('wrapper')}>
-            <div className={cx('container', 'p-4')}>
-                <div className={cx('info d-flex align-items-center justify-content-center flex-column d-lg-block')}>
-                    <div className="row">
-                        <div className="col-12 col-lg-6 d-flex align-items-center justify-content-lg-start justify-content-center mb-2 mb-lg-0">
-                            <span className={cx('label-text')}>Question {indexQuestion + 1}</span>
+            {!!words && (
+                <>
+                    <div className={cx('container', 'p-4')}>
+                        <div
+                            className={cx(
+                                'info d-flex align-items-center justify-content-center flex-column d-lg-block',
+                            )}
+                        >
+                            <div className="row">
+                                <div className="col-12 col-lg-6 d-flex align-items-center justify-content-lg-start justify-content-center mb-2 mb-lg-0">
+                                    <span className={cx('label-text')}>Question {indexQuestion + 1}</span>
+                                </div>
+                                <div className="col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-center">
+                                    <label className={cx('choose-voice')}>
+                                        <span>Voice: </span>
+                                        <select
+                                            className={cx('select-speaker')}
+                                            value={voice?.name}
+                                            onChange={handleVoiceChange}
+                                        >
+                                            {window.speechSynthesis.getVoices().map((voice) => (
+                                                <option key={voice.name} value={voice.name}>
+                                                    {voice.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
-                        <div className="col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-center">
-                            <label className={cx('choose-voice')}>
-                                <span>Voice: </span>
-                                <select
-                                    className={cx('select-speaker')}
-                                    value={voice?.name}
-                                    onChange={handleVoiceChange}
-                                >
-                                    {window.speechSynthesis.getVoices().map((voice) => (
-                                        <option key={voice.name} value={voice.name}>
-                                            {voice.name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </label>
-                        </div>
+                        {!complete && !showAnswer && (
+                            <FontAwesomeIcon
+                                className={cx('icon-speaker')}
+                                icon={faVolumeHigh}
+                                onClick={handleClickSpeak}
+                            />
+                        )}
+                        {!complete && showAnswer && (
+                            <div className={cx('answer-container')}>
+                                <h1 className="mb-3" style={{ fontSize: '5rem' }}>
+                                    {listEnWords[indexQuestion]}
+                                </h1>
+                                <button className={cx('btn')} onClick={toggle}>
+                                    View Vietnamese
+                                </button>
+                                <Collapse isOpen={isOpen}>
+                                    <Card>
+                                        <CardBody>
+                                            <h1 style={{ fontSize: '2.2rem', opacity: '0.5' }}>
+                                                {currWords[listEnWords[indexQuestion]]}
+                                            </h1>
+                                        </CardBody>
+                                    </Card>
+                                </Collapse>
+                            </div>
+                        )}
+                        {!complete && showAnswer && (
+                            <div className={cx('icon-speaker-small')}>
+                                <FontAwesomeIcon icon={faVolumeHigh} onClick={handlePlay} />
+                            </div>
+                        )}
+                        {complete && (
+                            <div className={cx('complete-cotaniner')}>
+                                <h1>Complete</h1>
+                                <Link className={cx('btn')} to={routes.home}>
+                                    Back To Home
+                                </Link>
+                            </div>
+                        )}
                     </div>
-                </div>
-                {!complete && !showAnswer && (
-                    <FontAwesomeIcon className={cx('icon-speaker')} icon={faVolumeHigh} onClick={handleClickSpeak} />
-                )}
-                {!complete && showAnswer && (
-                    <div className={cx('answer-container')}>
-                        <h1 className="mb-3" style={{ fontSize: '5rem' }}>
-                            {listEnWords[indexQuestion]}
-                        </h1>
-                        <button className={cx('btn')} onClick={toggle}>
-                            View Vietnamese
-                        </button>
-                        <Collapse isOpen={isOpen}>
-                            <Card>
-                                <CardBody>
-                                    <h1 style={{ fontSize: '2.2rem', opacity: '0.5' }}>
-                                        {currWords[listEnWords[indexQuestion]]}
-                                    </h1>
-                                </CardBody>
-                            </Card>
-                        </Collapse>
-                    </div>
-                )}
-                {!complete && showAnswer && (
-                    <div className={cx('icon-speaker-small')}>
-                        <FontAwesomeIcon icon={faVolumeHigh} onClick={handlePlay} />
-                    </div>
-                )}
-                {complete && (
-                    <div className={cx('complete-cotaniner')}>
-                        <h1>Complete</h1>
-                        <Link className={cx('btn')} to={routes.home}>
+                    <div className={cx('list-btn', 'flex-column', 'flex-lg-row')}>
+                        <Link className={cx('btn', 'me-lg-4')} to={routes.home}>
                             Back To Home
                         </Link>
+                        <button
+                            className={cx('btn', 'me-lg-4', {
+                                disable: !canShowAnswer,
+                            })}
+                            onClick={handleShowAnswer}
+                        >
+                            Show Answer
+                        </button>
+                        <button className={cx('btn', 'me-lg-4')} onClick={handlePrevQuestion}>
+                            Previous Question
+                        </button>
+                        <button className={cx('btn', 'me-lg-4')} onClick={handleNextQuestion}>
+                            Next Question
+                        </button>
                     </div>
-                )}
-            </div>
-            <div className={cx('list-btn', 'flex-column', 'flex-lg-row')}>
-                <Link className={cx('btn', 'me-lg-4')} to={routes.home}>
-                    Back To Home
-                </Link>
-                <button
-                    className={cx('btn', 'me-lg-4', {
-                        disable: !canShowAnswer,
-                    })}
-                    onClick={handleShowAnswer}
-                >
-                    Show Answer
-                </button>
-                <button className={cx('btn', 'me-lg-4')} onClick={handlePrevQuestion}>
-                    Previous Question
-                </button>
-                <button className={cx('btn', 'me-lg-4')} onClick={handleNextQuestion}>
-                    Next Question
-                </button>
-            </div>
+                </>
+            )}
+            {!words && (
+                <Spinner className="spinner" color="primary">
+                    Loading
+                </Spinner>
+            )}
         </div>
     );
 }

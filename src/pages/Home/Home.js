@@ -27,7 +27,7 @@ function Home() {
                     ))}
             </div>
             {!words && (
-                <Spinner className={cx('spinner')} color="primary">
+                <Spinner className="spinner" color="primary">
                     Loading
                 </Spinner>
             )}
