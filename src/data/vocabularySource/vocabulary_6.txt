@@ -1,0 +1,134 @@
+Disease
+bệnh tật
+Supporter
+cổ động viên
+Support
+ủng hộ, hỗ trợ
+Pregnant
+mang thai
+Whistle
+huýt sáo
+Push-up
+hít đất
+Attacker
+tiền đạo
+Attack
+tấn công
+Grocery
+tạp hóa
+Store
+cửa hàng
+Medicine
+thuốc
+Client
+khách hàng
+Customer
+người tiêu dùng
+Symptom
+triệu chứng
+Flag
+lá cờ
+Backache
+đau lưng
+Property
+tài sản
+Asset
+tài sản
+Headache
+đau đầu
+Loan
+khoản vay
+Defender
+hậu vệ
+Defend
+Bảo vệ, phòng thủ
+Failure
+sự thất bại
+Toothache
+đau răng
+Real estate
+bất động sản
+Real estate agent
+đại lý bất động sản
+Sore throat
+đau họng
+Abdominal pain
+đau bụng, đau dạ dày
+Pain
+đau (do chấn thương hoặc bệnh)
+Painful
+đau đớn
+Present
+món quà
+Presentation
+bài thuyết trình
+Mortgage
+thế chấp
+Initiate
+bắt đầu, khởi xướng
+Initially
+ban đầu
+Commence
+bắt đầu
+Stomach ache
+đau dạ dày
+Midfielder
+Trung vệ
+Pharmacy
+nhà thuốc
+Pray
+cầu nguyện
+Pharmacist
+dược sĩ
+Proceed
+tiến hành
+Diagnose
+chẩn đoán
+Goal keeper
+thủ môn
+Bank teller
+nhân viên ngân hàng
+Wave
+sóng, vẫy tay, vẫy (cờ)
+Procedure
+thủ tục
+Invest
+đầu tư
+Sales agent
+đại lý/ nhân viên bán hàng
+Success
+sự thành công
+Successul
+thành công
+Referee
+trọng tài
+Sick
+ốm, bệnh
+Sickness
+sự ốm, sự bệnh, sự đau yếu
+ill
+ốm
+illness
+sự đau yếu, ốm, bệnh tật
+Homesick
+nhớ nhà, nhớ quê hương
+Carsick
+bị say xe
+Lovesick
+tương tư, đau khổ vì yêu
+Match
+trận đấu
+Stadium
+sân vận động
+Land broker
+môi giới đất, cò đất
+Direct
+trực tiếp, hướng dẫn, chỉ đạo
+Director
+giám đốc, đạo diễn
+Direction
+phương hướng, sự hướng dẫn
+Require
+yêu cầu
+Request
+yêu cầu, đề nghị
