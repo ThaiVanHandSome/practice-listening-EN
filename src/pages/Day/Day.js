@@ -157,6 +157,9 @@ function Day() {
                 )}
             </div>
             <div className={cx('list-btn', 'flex-column', 'flex-lg-row')}>
+                <Link className={cx('btn', 'me-lg-4')} to={routes.home}>
+                    Back To Home
+                </Link>
                 <button
                     className={cx('btn', 'me-lg-4', {
                         disable: !canShowAnswer,
