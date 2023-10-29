@@ -1,10 +1,10 @@
-import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './Home.module.scss';
 import { useEffect, useState } from 'react';
 import { Spinner } from 'reactstrap';
 import getData from '~/data/vocabularySource';
+import routes from '~/config/routes';
 
 const cx = classNames.bind(styles);
 function Home() {
@@ -25,6 +25,9 @@ function Home() {
                             Day {index + 1}
                         </Link>
                     ))}
+                <Link to={'/translate'} className={cx('btn', 'btn-translate')}>
+                    TRANSLATE
+                </Link>
             </div>
             {!words && (
                 <Spinner className="spinner" color="primary">

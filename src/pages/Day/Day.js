@@ -114,7 +114,11 @@ function Day() {
         <div className={cx('wrapper')}>
             {!!words && (
                 <>
+                    {/* <Link className={cx('btn', 'me-lg-4')} onClick={handleNextQuestion}>
+                        TEST
+                    </Link> */}
                     <div className={cx('container', 'p-4', 'w-lg-75')}>
+                        <span className={cx('title')}>Day {parseInt(id) + 1}</span>
                         <div
                             className={cx(
                                 'info d-flex align-items-center justify-content-center flex-column d-lg-block',
@@ -122,7 +126,9 @@ function Day() {
                         >
                             <div className="row">
                                 <div className="col-12 col-lg-6 d-flex align-items-center justify-content-lg-start justify-content-center mb-2 mb-lg-0">
-                                    <span className={cx('label-text')}>Question {indexQuestion + 1}</span>
+                                    <span className={cx('label-text')}>
+                                        Question {indexQuestion + 1} / {listEnWords.length}
+                                    </span>
                                 </div>
                                 <div className="col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-center">
                                     <label className={cx('choose-voice')}>
@@ -154,9 +160,18 @@ function Day() {
                                 <h1 className="mb-3" style={{ fontSize: '5rem', textAlign: 'center' }}>
                                     {listEnWords[indexQuestion]}
                                 </h1>
-                                <button className={cx('btn')} onClick={toggle}>
-                                    View Vietnamese
-                                </button>
+                                <div className={cx('list-btn-ans', 'd-flex')}>
+                                    <button className={cx('btn', 'me-4')} onClick={toggle}>
+                                        View Vietnamese
+                                    </button>
+                                    {/* <Link
+                                        to={`/translate/${listEnWords[indexQuestion]}`}
+                                        className={cx('btn')}
+                                        onClick={toggle}
+                                    >
+                                        View Detail
+                                    </Link> */}
+                                </div>
                                 <Collapse isOpen={isOpen}>
                                     <Card>
                                         <CardBody>
