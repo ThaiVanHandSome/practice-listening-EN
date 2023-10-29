@@ -16,6 +16,15 @@ function Home() {
         };
         getVocabulary();
     }, []);
+
+    useEffect(() => {
+        const payload = {
+            currIndex: 0,
+            currList: [],
+            start: false,
+        };
+        localStorage.setItem('appState', JSON.stringify(payload));
+    }, []);
     return (
         <div className={cx('wrapper')}>
             <div className={cx('container')}>

@@ -14,7 +14,7 @@ import { Spinner } from 'reactstrap';
 const cx = classNames.bind(styles);
 
 function Translate() {
-    const [text, setText] = useState('');
+    const [text, setText] = useState(null);
     const [result, setResult] = useState('');
 
     const [voice, setVoice] = useState(null);
@@ -99,6 +99,7 @@ function Translate() {
 
     return (
         <div className={cx('wrapper')}>
+            {((q && !!result) || !q) && (
                 <div className={cx('container', 'w-lg-75', 'p-4')}>
                     <div className="row">
                         <div className="col">
@@ -196,6 +197,12 @@ function Translate() {
                         </ul>
                     </div>
                 </div>
+            )}
+            {q && !result && (
+                <Spinner className="spinner" color="primary">
+                    Loading
+                </Spinner>
+            )}
         </div>
     );
 }

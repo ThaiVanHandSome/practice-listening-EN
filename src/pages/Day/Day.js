@@ -9,10 +9,17 @@ import { Collapse, CardBody, Card } from 'reactstrap';
 import routes from '~/config/routes';
 import getData from '~/data/vocabularySource';
 import { Spinner } from 'reactstrap';
+import { updateState } from '~/store/Reducers/stateDay';
+import { useDispatch, useSelector } from 'react-redux';
 
 const cx = classNames.bind(styles);
 
 function Day() {
+    // const stateDay = useSelector((state) => state.stateDayReducer);
+    // const dispatch = useDispatch;
+    const savedAppState = JSON.parse(localStorage.getItem('appState'));
+    // dispatch(updateState(savedAppState));
+
     const [words, setWords] = useState(null);
 
     const [indexQuestion, setIndexQuestion] = useState(0);
@@ -29,11 +36,13 @@ function Day() {
     if (words !== null) {
         currWords = words[id];
     }
-    console.log(currWords);
-    const listEnWords = useMemo(() => {
+    let listEnWords = useMemo(() => {
         const list = Object.keys(currWords);
         return list.sort(randomSort);
     }, [currWords]);
+    if (savedAppState.start === true) {
+        listEnWords = savedAppState.currList;
+    }
     const [isPaused, setIsPaused] = useState(false);
     const [utterance, setUtterance] = useState(null);
 
@@ -56,6 +65,12 @@ function Day() {
             setWords(data);
         };
         getVocabulary();
+    }, []);
+
+    useEffect(() => {
+        if (savedAppState.start === true) {
+            setIndexQuestion(savedAppState.currIndex);
+        }
     }, []);
 
     const handlePlay = () => {
@@ -83,6 +98,7 @@ function Day() {
     };
 
     const handleNextQuestion = () => {
+        handleSaveState();
         setShowAnswer(false);
         setCanShowAnswer(false);
         setIsOpen(false);
@@ -95,6 +111,7 @@ function Day() {
     };
 
     const handlePrevQuestion = () => {
+        handleSaveState();
         setShowAnswer(false);
         setCanShowAnswer(false);
         setIsOpen(false);
@@ -108,6 +125,16 @@ function Day() {
 
     const handleShowAnswer = () => {
         setShowAnswer((prev) => !prev);
+    };
+
+    const handleSaveState = () => {
+        const payload = {
+            currIndex: indexQuestion + 1,
+            currList: listEnWords,
+            start: true,
+        };
+        localStorage.setItem('appState', JSON.stringify(payload));
+        // dispatch(updateState(payload));
     };
 
     return (
@@ -164,13 +191,9 @@ function Day() {
                                     <button className={cx('btn', 'me-4')} onClick={toggle}>
                                         View Vietnamese
                                     </button>
-                                    {/* <Link
-                                        to={`/translate/${listEnWords[indexQuestion]}`}
-                                        className={cx('btn')}
-                                        onClick={toggle}
-                                    >
+                                    <Link to={`/translate/${listEnWords[indexQuestion]}`} className={cx('btn')}>
                                         View Detail
-                                    </Link> */}
+                                    </Link>
                                 </div>
                                 <Collapse isOpen={isOpen}>
                                     <Card>

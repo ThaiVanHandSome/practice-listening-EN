@@ -7,7 +7,7 @@ function App() {
             <BrowserRouter basename="/practice-listening-EN">
                 <Routes>
                     {publicRoutes.map((item, index) => (
-                        <Route key={index} path={item.path} element={<item.Component />} />
+                        <Route key={index} path={item.path} element={<item.Component key={index} />} />
                     ))}
                 </Routes>
             </BrowserRouter>
