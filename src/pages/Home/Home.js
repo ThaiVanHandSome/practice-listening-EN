@@ -27,14 +27,17 @@ function Home() {
     }, []);
     return (
         <div className={cx('wrapper')}>
-            <div className={cx('container')}>
+            <div className={cx('container', 'mt-lg-0')}>
                 {!!words &&
                     words.map((_, index) => (
                         <Link className={cx('btn')} key={index} to={`/day/${index}`}>
                             Day {index + 1}
                         </Link>
                     ))}
-                <Link to={'/translate'} className={cx('btn', 'btn-translate')}>
+                <Link to={'/day/all'} className={cx('btn-all')}>
+                    ALL DAY
+                </Link>
+                <Link to={'/translate'} className={cx('btn-translate')}>
                     TRANSLATE
                 </Link>
             </div>

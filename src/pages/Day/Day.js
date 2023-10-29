@@ -34,7 +34,16 @@ function Day() {
     let { id } = useParams();
     let currWords = {};
     if (words !== null) {
-        currWords = words[id];
+        if (id === 'all') {
+            words.forEach((item) => {
+                currWords = {
+                    ...currWords,
+                    ...item,
+                };
+            });
+        } else {
+            currWords = words[id];
+        }
     }
     let listEnWords = useMemo(() => {
         const list = Object.keys(currWords);
@@ -145,7 +154,8 @@ function Day() {
                         TEST
                     </Link> */}
                     <div className={cx('container', 'p-4', 'w-lg-75')}>
-                        <span className={cx('title')}>Day {parseInt(id) + 1}</span>
+                        {id !== 'all' && <span className={cx('title')}>Day {parseInt(id) + 1}</span>}
+                        {id === 'all' && <span className={cx('title')}>All Day</span>}
                         <div
                             className={cx(
                                 'info d-flex align-items-center justify-content-center flex-column d-lg-block',
