@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import classNames from 'classnames/bind';
-import styles from './Test.module.scss';
+import styles from './TestVocabulary.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
 import getData from '~/data/vocabularySource';
@@ -11,7 +11,7 @@ import { Spinner } from 'reactstrap';
 
 const cx = classNames.bind(styles);
 
-function Test() {
+function TestVocabulary() {
     const [words, setWords] = useState(null);
     const [inpVal, setInpVal] = useState('');
     const [numberOfWrong, setNumberOfWrong] = useState(0);
@@ -28,19 +28,22 @@ function Test() {
     const [utterance, setUtterance] = useState(null);
 
     let { id } = useParams();
-    let currWords = {};
-    if (words !== null) {
-        if (id === 'all') {
-            words.forEach((item) => {
-                currWords = {
-                    ...currWords,
-                    ...item,
-                };
-            });
-        } else {
-            currWords = words[id];
+    let currWords = useMemo(() => {
+        let currWords = {};
+        if (words !== null) {
+            if (id === 'all') {
+                words.forEach((item) => {
+                    currWords = {
+                        ...currWords,
+                        ...item,
+                    };
+                });
+            } else {
+                currWords = words[id];
+            }
         }
-    }
+        return currWords;
+    }, [words]);
     let listEnWords = useMemo(() => {
         const list = Object.keys(currWords);
         return list.sort(randomSort);
@@ -100,6 +103,7 @@ function Test() {
     };
 
     useEffect(() => {
+        if (!listEnWords) return;
         const synth = window.speechSynthesis;
         const u = new SpeechSynthesisUtterance(listEnWords[indexQuestion]);
         // const voices = synth.getVoices();
@@ -125,7 +129,7 @@ function Test() {
     });
     return (
         <div className={cx('wrapper')}>
-            {words && (
+            {!!words && (
                 <>
                     <span className={cx('lbl-warning')}>Mỗi câu hỏi bạn được phép trả lời tối đa 3 lần</span>
                     <span className={cx('lbl-notice')}>Bạn còn {3 - numberOfWrong} lần thử</span>
@@ -157,11 +161,7 @@ function Test() {
                         </div>
                         {pass === null && (
                             <>
-                                <FontAwesomeIcon
-                                    className={cx('icon-speaker')}
-                                    icon={faVolumeHigh}
-                                    onClick={handlePlay}
-                                />
+                                <span className={cx('questions')}>{currWords[listEnWords[indexQuestion]]}</span>
                                 <input
                                     ref={inpRef}
                                     value={inpVal}
@@ -195,6 +195,13 @@ function Test() {
                                         ))}
                                     </ul>
                                 )}
+                                {pass === true && (
+                                    <FontAwesomeIcon
+                                        className={cx('icon-speaker')}
+                                        icon={faVolumeHigh}
+                                        onClick={handlePlay}
+                                    />
+                                )}
                                 <div className={cx('list-btns')}>
                                     <Link to={routes.home} className={cx('btn')}>
                                         Về trang chủ
@@ -224,4 +231,4 @@ function Test() {
     );
 }
 
-export default Test;
+export default TestVocabulary;

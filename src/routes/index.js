@@ -3,6 +3,8 @@ import routes from '~/config/routes';
 import Home from '~/pages/Home';
 import Day from '~/pages/Day';
 import Translate from '~/pages/Translate';
+import Test from '~/pages/Test';
+import TestVocabulary from '~/pages/TestVocabulary';
 
 const publicRoutes = [
     {
@@ -20,6 +22,14 @@ const publicRoutes = [
     {
         path: routes.translateAll,
         Component: Translate,
+    },
+    {
+        path: routes.test,
+        Component: Test,
+    },
+    {
+        path: routes.testVocabulary,
+        Component: TestVocabulary,
     },
 ];
 

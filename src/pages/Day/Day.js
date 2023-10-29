@@ -32,19 +32,23 @@ function Day() {
     const toggle = () => setIsOpen(!isOpen);
 
     let { id } = useParams();
-    let currWords = {};
-    if (words !== null) {
-        if (id === 'all') {
-            words.forEach((item) => {
-                currWords = {
-                    ...currWords,
-                    ...item,
-                };
-            });
-        } else {
-            currWords = words[id];
+    const idVal = id === 'all' ? id : parseInt(id);
+    let currWords = useMemo(() => {
+        let currWords = {};
+        if (words !== null) {
+            if (id === 'all') {
+                words.forEach((item) => {
+                    currWords = {
+                        ...currWords,
+                        ...item,
+                    };
+                });
+            } else {
+                currWords = words[id];
+            }
         }
-    }
+        return currWords;
+    }, [words]);
     let listEnWords = useMemo(() => {
         const list = Object.keys(currWords);
         return list.sort(randomSort);
@@ -150,11 +154,16 @@ function Day() {
         <div className={cx('wrapper')}>
             {!!words && (
                 <>
-                    {/* <Link className={cx('btn', 'me-lg-4')} onClick={handleNextQuestion}>
-                        TEST
-                    </Link> */}
+                    <div>
+                        <Link to={`/test/${idVal}`} className={cx('btn', 'me-lg-4')}>
+                            TEST LISTENING
+                        </Link>
+                        <Link to={`/testvocabulary/${idVal}`} className={cx('btn', 'me-lg-4')}>
+                            TEST VOCABULARY
+                        </Link>
+                    </div>
                     <div className={cx('container', 'p-4', 'w-lg-75')}>
-                        {id !== 'all' && <span className={cx('title')}>Day {parseInt(id) + 1}</span>}
+                        {id !== 'all' && <span className={cx('title')}>Day {idVal + 1}</span>}
                         {id === 'all' && <span className={cx('title')}>All Day</span>}
                         <div
                             className={cx(
