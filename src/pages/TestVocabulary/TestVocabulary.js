@@ -18,7 +18,7 @@ function TestVocabulary() {
     const [inpVal, setInpVal] = useState(savedAppState?.inpVal || '');
     const [numberOfWrong, setNumberOfWrong] = useState(savedAppState?.numberOfWrong || 0);
     const [answers, setAnswers] = useState(savedAppState?.answers || []);
-    const [pass, setPass] = useState(savedAppState?.pass || null);
+    const [pass, setPass] = useState(savedAppState?.pass !== undefined ? savedAppState?.pass : null);
     const [complete, setComplete] = useState(savedAppState?.complete || false);
 
     const inpRef = useRef(null);
