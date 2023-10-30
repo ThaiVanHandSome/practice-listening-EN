@@ -4,11 +4,11 @@ import styles from './Home.module.scss';
 import { useEffect, useState } from 'react';
 import { Spinner } from 'reactstrap';
 import getData from '~/data/vocabularySource';
-import routes from '~/config/routes';
 
 const cx = classNames.bind(styles);
 function Home() {
     const [words, setWords] = useState(null);
+    // console.log(typeof words);
     useEffect(() => {
         const getVocabulary = async () => {
             const data = await getData();
@@ -18,12 +18,9 @@ function Home() {
     }, []);
 
     useEffect(() => {
-        const payload = {
-            currIndex: 0,
-            currList: [],
-            start: false,
-        };
-        localStorage.setItem('appState', JSON.stringify(payload));
+        localStorage.removeItem('dayState');
+        localStorage.removeItem('testState');
+        localStorage.removeItem('testVocaState');
     }, []);
     return (
         <div className={cx('wrapper')}>

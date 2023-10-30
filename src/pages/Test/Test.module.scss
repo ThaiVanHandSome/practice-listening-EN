@@ -1,5 +1,6 @@
 .wrapper {
     display: flex;
+    min-height: 100vh;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -152,4 +153,20 @@
 .list-btns {
     display: flex;
     justify-content: center;
+}
+
+.list-btn-ans {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 36px;
+    margin-top: -24px;
+}
+
+.icon-speaker-small {
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+    font-size: 4rem;
+    cursor: pointer;
 }

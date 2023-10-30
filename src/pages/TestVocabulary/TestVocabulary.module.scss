@@ -1,4 +1,6 @@
 .wrapper {
+    width: 100%;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -160,4 +162,20 @@
     font-size: 6rem;
     margin-top: 16px;
     margin-bottom: 32px;
+}
+
+.icon-speaker-small {
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+    font-size: 4rem;
+    cursor: pointer;
+}
+
+.list-btn-ans {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 36px;
+    margin-top: -24px;
 }

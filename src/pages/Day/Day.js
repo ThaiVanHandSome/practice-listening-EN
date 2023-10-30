@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './Day.module.scss';
@@ -9,60 +9,57 @@ import { Collapse, CardBody, Card } from 'reactstrap';
 import routes from '~/config/routes';
 import getData from '~/data/vocabularySource';
 import { Spinner } from 'reactstrap';
-import { updateState } from '~/store/Reducers/stateDay';
-import { useDispatch, useSelector } from 'react-redux';
 
 const cx = classNames.bind(styles);
 
 function Day() {
-    // const stateDay = useSelector((state) => state.stateDayReducer);
-    // const dispatch = useDispatch;
-    const savedAppState = JSON.parse(localStorage.getItem('appState'));
-    // dispatch(updateState(savedAppState));
+    let savedAppState = JSON.parse(localStorage.getItem('dayState'));
+    if (!savedAppState) {
+        savedAppState = {};
+    }
 
     const [words, setWords] = useState(null);
 
-    const [indexQuestion, setIndexQuestion] = useState(0);
-    const [voice, setVoice] = useState(null);
-    const [showAnswer, setShowAnswer] = useState(false);
-    const [canShowAnswer, setCanShowAnswer] = useState(false);
-    const [isOpen, setIsOpen] = useState(false);
-    const [complete, setComplete] = useState(false);
+    const [indexQuestion, setIndexQuestion] = useState(savedAppState?.indexQuestion || 0);
+    const [voice, setVoice] = useState(savedAppState?.voice || null);
+    const [showAnswer, setShowAnswer] = useState(savedAppState?.showAnswer || false);
+    const [canShowAnswer, setCanShowAnswer] = useState(savedAppState?.canShowAnswer || false);
+    const [isOpen, setIsOpen] = useState(savedAppState?.isOpen || false);
+    const [complete, setComplete] = useState(savedAppState?.complete || false);
+    const [isPaused, setIsPaused] = useState(false);
+    const [utterance, setUtterance] = useState(savedAppState?.utterance || null);
 
     const toggle = () => setIsOpen(!isOpen);
 
     let { id } = useParams();
     const idVal = id === 'all' ? id : parseInt(id);
-    let currWords = useMemo(() => {
-        let currWords = {};
+    const currWords = useMemo(() => {
+        let objChoosen = {};
         if (words !== null) {
             if (id === 'all') {
                 words.forEach((item) => {
-                    currWords = {
-                        ...currWords,
+                    objChoosen = {
+                        ...objChoosen,
                         ...item,
                     };
                 });
             } else {
-                currWords = words[id];
+                objChoosen = words[id];
             }
         }
-        return currWords;
+        return objChoosen;
     }, [words]);
     let listEnWords = useMemo(() => {
         const list = Object.keys(currWords);
         return list.sort(randomSort);
     }, [currWords]);
-    if (savedAppState.start === true) {
-        listEnWords = savedAppState.currList;
+    if (savedAppState?.start === true && savedAppState?.listEnWords.length !== 0) {
+        listEnWords = savedAppState.listEnWords;
     }
-    const [isPaused, setIsPaused] = useState(false);
-    const [utterance, setUtterance] = useState(null);
 
     useEffect(() => {
         const synth = window.speechSynthesis;
         const u = new SpeechSynthesisUtterance(listEnWords[indexQuestion]);
-        // const voices = synth.getVoices();
 
         setVoice(voice);
         setUtterance(u);
@@ -78,12 +75,6 @@ function Day() {
             setWords(data);
         };
         getVocabulary();
-    }, []);
-
-    useEffect(() => {
-        if (savedAppState.start === true) {
-            setIndexQuestion(savedAppState.currIndex);
-        }
     }, []);
 
     const handlePlay = () => {
@@ -111,7 +102,6 @@ function Day() {
     };
 
     const handleNextQuestion = () => {
-        handleSaveState();
         setShowAnswer(false);
         setCanShowAnswer(false);
         setIsOpen(false);
@@ -124,7 +114,6 @@ function Day() {
     };
 
     const handlePrevQuestion = () => {
-        handleSaveState();
         setShowAnswer(false);
         setCanShowAnswer(false);
         setIsOpen(false);
@@ -140,15 +129,20 @@ function Day() {
         setShowAnswer((prev) => !prev);
     };
 
-    const handleSaveState = () => {
+    useEffect(() => {
         const payload = {
-            currIndex: indexQuestion + 1,
-            currList: listEnWords,
+            indexQuestion,
+            listEnWords,
+            showAnswer,
+            canShowAnswer,
+            isOpen,
+            complete,
+            utterance,
+            voice,
             start: true,
         };
-        localStorage.setItem('appState', JSON.stringify(payload));
-        // dispatch(updateState(payload));
-    };
+        localStorage.setItem('dayState', JSON.stringify(payload));
+    });
 
     return (
         <div className={cx('wrapper')}>

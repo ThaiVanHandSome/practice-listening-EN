@@ -12,39 +12,46 @@ import { Spinner } from 'reactstrap';
 const cx = classNames.bind(styles);
 
 function Test() {
+    const savedAppState = JSON.parse(localStorage.getItem('testState'));
     const [words, setWords] = useState(null);
-    const [inpVal, setInpVal] = useState('');
-    const [numberOfWrong, setNumberOfWrong] = useState(0);
-    const [answers, setAnswers] = useState([]);
-    const [pass, setPass] = useState(null);
-    const [complete, setComplete] = useState(false);
+    const [inpVal, setInpVal] = useState(savedAppState?.inpVal || '');
+    const [numberOfWrong, setNumberOfWrong] = useState(savedAppState?.numberOfWrong || 0);
+    const [answers, setAnswers] = useState(savedAppState?.answers || []);
+    const [pass, setPass] = useState(savedAppState?.pass !== undefined ? savedAppState?.pass : null);
+    const [complete, setComplete] = useState(savedAppState?.complete || false);
 
     const inpRef = useRef(null);
 
-    const [indexQuestion, setIndexQuestion] = useState(0);
+    const [indexQuestion, setIndexQuestion] = useState(savedAppState?.indexQuestion || 0);
 
-    const [voice, setVoice] = useState(null);
+    const [voice, setVoice] = useState(savedAppState?.voice || null);
     const [isPaused, setIsPaused] = useState(false);
     const [utterance, setUtterance] = useState(null);
 
     let { id } = useParams();
-    let currWords = {};
-    if (words !== null) {
-        if (id === 'all') {
-            words.forEach((item) => {
-                currWords = {
-                    ...currWords,
-                    ...item,
-                };
-            });
-        } else {
-            currWords = words[id];
+    const currWords = useMemo(() => {
+        let objChoosen = {};
+        if (words !== null) {
+            if (id === 'all') {
+                words.forEach((item) => {
+                    objChoosen = {
+                        ...objChoosen,
+                        ...item,
+                    };
+                });
+            } else {
+                objChoosen = words[id];
+            }
         }
-    }
+        return objChoosen;
+    }, [words]);
     let listEnWords = useMemo(() => {
         const list = Object.keys(currWords);
         return list.sort(randomSort);
     }, [currWords]);
+    if (savedAppState?.start === true && savedAppState?.listEnWords.length !== 0) {
+        listEnWords = savedAppState.listEnWords;
+    }
 
     const handlePlay = () => {
         const synth = window.speechSynthesis;
@@ -77,7 +84,6 @@ function Test() {
                 }
                 return prev;
             });
-            // inpRef.current.classList.add(`.${cx('wrong')}`);
         } else {
             setPass(true);
         }
@@ -91,6 +97,7 @@ function Test() {
     };
 
     const handleNext = () => {
+        // handleSaveState();
         setIndexQuestion((prev) => prev + 1);
         reset();
     };
@@ -99,10 +106,19 @@ function Test() {
         reset();
     };
 
+    const handleCheckKey = (e) => {
+        if (e.keyCode === 13) {
+            handleSubmit();
+        }
+    };
+
+    const handleChange = (e) => {
+        setInpVal(e.target.value);
+    };
+
     useEffect(() => {
         const synth = window.speechSynthesis;
         const u = new SpeechSynthesisUtterance(listEnWords[indexQuestion]);
-        // const voices = synth.getVoices();
 
         setVoice(voice);
         setUtterance(u);
@@ -123,6 +139,22 @@ function Test() {
     useEffect(() => {
         if (inpRef.current) inpRef.current.focus();
     });
+
+    useEffect(() => {
+        const payload = {
+            inpVal,
+            numberOfWrong,
+            answers,
+            pass,
+            complete,
+            indexQuestion,
+            voice,
+            listEnWords,
+            start: true,
+        };
+        console.log(payload);
+        localStorage.setItem('testState', JSON.stringify(payload));
+    });
     return (
         <div className={cx('wrapper')}>
             {words && (
@@ -130,6 +162,13 @@ function Test() {
                     <span className={cx('lbl-warning')}>Mỗi câu hỏi bạn được phép trả lời tối đa 3 lần</span>
                     <span className={cx('lbl-notice')}>Bạn còn {3 - numberOfWrong} lần thử</span>
                     <div className={cx('container', 'container-question')}>
+                        {pass && (
+                            <FontAwesomeIcon
+                                className={cx('icon-speaker-small')}
+                                icon={faVolumeHigh}
+                                onClick={handlePlay}
+                            />
+                        )}
                         <div className={cx('info')}>
                             <div className="row">
                                 <div className="col-12 col-lg-6 d-flex align-items-center justify-content-lg-start justify-content-center mb-2 mb-lg-0">
@@ -168,7 +207,8 @@ function Test() {
                                     type="text"
                                     className={cx('inp-ans')}
                                     placeholder="Enter your answer..."
-                                    onChange={(e) => setInpVal(e.target.value)}
+                                    onChange={(e) => handleChange(e)}
+                                    onKeyDown={(e) => handleCheckKey(e)}
                                 />
                                 <button className={cx('btn')} onClick={handleSubmit}>
                                     Submit
@@ -194,6 +234,13 @@ function Test() {
                                             </li>
                                         ))}
                                     </ul>
+                                )}
+                                {pass && (
+                                    <div className={cx('list-btn-ans', 'd-flex')}>
+                                        <Link to={`/translate/${listEnWords[indexQuestion]}`} className={cx('btn')}>
+                                            View Detail
+                                        </Link>
+                                    </div>
                                 )}
                                 <div className={cx('list-btns')}>
                                     <Link to={routes.home} className={cx('btn')}>
