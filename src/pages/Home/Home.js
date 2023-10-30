@@ -34,9 +34,14 @@ function Home() {
                 <Link to={'/day/all'} className={cx('btn-all')}>
                     ALL DAY
                 </Link>
-                <Link to={'/translate'} className={cx('btn-translate')}>
-                    TRANSLATE
-                </Link>
+                <div className={cx('list-btn')}>
+                    <Link to={'/translate'} className={cx('btn-translate')}>
+                        TRANSLATE
+                    </Link>
+                    <Link to={'/listen'} className={cx('btn-translate')}>
+                        LISTEN
+                    </Link>
+                </div>
             </div>
             {!words && (
                 <Spinner className="spinner" color="primary">

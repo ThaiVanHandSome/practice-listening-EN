@@ -5,6 +5,7 @@ import Day from '~/pages/Day';
 import Translate from '~/pages/Translate';
 import Test from '~/pages/Test';
 import TestVocabulary from '~/pages/TestVocabulary';
+import Listen from '~/pages/Listen';
 
 const publicRoutes = [
     {
@@ -30,6 +31,14 @@ const publicRoutes = [
     {
         path: routes.testVocabulary,
         Component: TestVocabulary,
+    },
+    {
+        path: routes.listenAll,
+        Component: Listen,
+    },
+    {
+        path: routes.listen,
+        Component: Listen,
     },
 ];
 
