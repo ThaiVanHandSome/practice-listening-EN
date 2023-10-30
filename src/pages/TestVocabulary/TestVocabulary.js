@@ -22,6 +22,7 @@ function TestVocabulary() {
     const [complete, setComplete] = useState(savedAppState?.complete || false);
 
     const inpRef = useRef(null);
+    const wrapperRef = useRef(null);
 
     const [indexQuestion, setIndexQuestion] = useState(savedAppState?.indexQuestion || 0);
 
@@ -61,7 +62,6 @@ function TestVocabulary() {
             synth.resume();
         } else {
             utterance.voice = voice;
-            utterance.rate = 1.2;
             synth.speak(utterance);
         }
 
@@ -79,6 +79,7 @@ function TestVocabulary() {
         setAnswers((prev) => [...prev, inpVal]);
         if (inpVal.toLowerCase().trim() !== listEnWords[indexQuestion].toLowerCase()) {
             setNumberOfWrong((prev) => {
+                inpRef.current.classList.add(`${cx('wrong')}`);
                 prev += 1;
                 if (prev === 3) {
                     setPass(false);
@@ -104,6 +105,19 @@ function TestVocabulary() {
 
     const handleAgain = () => {
         reset();
+    };
+
+    const handleChange = (e) => {
+        setInpVal(e.target.value);
+        if (e.target.classList.remove(`${cx('wrong')}`)) {
+            e.target.classList.remove(`${cx('wrong')}`);
+        }
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.keyCode === 13) {
+            handleSubmit();
+        }
     };
 
     useEffect(() => {
@@ -147,8 +161,38 @@ function TestVocabulary() {
         console.log(payload);
         localStorage.setItem('testVocaState', JSON.stringify(payload));
     });
+
+    const handleKeyDownNotice = (e) => {
+        console.log(e);
+        if (e.key === 'Enter') {
+            if (pass !== null) {
+                if (pass === true) {
+                    handleNext();
+                } else {
+                    handleAgain();
+                }
+            }
+        }
+        if (e.key === 'Control' || e.key === 'Ctrl') {
+            if (pass === true) {
+                handlePlay();
+            }
+        }
+    };
+
+    useEffect(() => {
+        console.log(wrapperRef.current);
+        if (pass !== null) wrapperRef.current.focus();
+    }, [pass]);
+
+    // useEffect(() => {
+    //     window.addEventListener('keydown', handleKeyDownNotice);
+    //     return () => {
+    //         window.removeEventListener('keydown', handleKeyDownNotice);
+    //     };
+    // }, []);
     return (
-        <div className={cx('wrapper')}>
+        <div ref={wrapperRef} tabIndex={-1} onKeyDown={(e) => handleKeyDownNotice(e)} className={cx('wrapper')}>
             {!!words && (
                 <>
                     <span className={cx('lbl-warning')}>Mỗi câu hỏi bạn được phép trả lời tối đa 3 lần</span>
@@ -195,7 +239,8 @@ function TestVocabulary() {
                                     type="text"
                                     className={cx('inp-ans')}
                                     placeholder="Enter your answer..."
-                                    onChange={(e) => setInpVal(e.target.value)}
+                                    onChange={handleChange}
+                                    onKeyDown={(e) => handleKeyDown(e)}
                                 />
                                 <button className={cx('btn')} onClick={handleSubmit}>
                                     Submit
@@ -203,7 +248,12 @@ function TestVocabulary() {
                             </>
                         )}
                         {pass !== null && (
-                            <div className={'notice-container'}>
+                            <div
+                                // ref={wrapperRef}
+                                className={'notice-container'}
+                                // tabIndex={-1}
+                                // onKeyDown={(e) => handleKeyDownNotice(e)}
+                            >
                                 <h1
                                     className={cx('notice-lbl', {
                                         pass,

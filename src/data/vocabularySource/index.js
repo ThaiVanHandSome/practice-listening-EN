@@ -1,5 +1,5 @@
 const data = localStorage.getItem('data');
-const len = 30;
+const len = 19;
 const readVocabularyFile = async (url) => {
     return new Promise((resolve, reject) => {
         try {
@@ -39,9 +39,9 @@ const readJson = async (url) => {
 const getData = async () => {
     // let objWord = [];
     try {
-        if (data && JSON.parse(data).length >= len) {
-            return JSON.parse(localStorage.getItem('data'));
-        }
+        // if (data && JSON.parse(data).length >= len) {
+        //     return JSON.parse(localStorage.getItem('data'));
+        // }
         // for (let i = 1; i <= len; i++) {
         // if (data && i <= data.length) {
         //     continue;
@@ -49,7 +49,8 @@ const getData = async () => {
         // const url = `https://raw.githubusercontent.com/ThaiVanHandSome/file-vocabulary/master/vocabularySource/vocabulary_${i}.txt`;
         // }
         const url = 'https://raw.githubusercontent.com/ThaiVanHandSome/file-vocabulary/master/vocabulary.json';
-        const objWord = await readJson(url);
+        let objWord = await readJson(url);
+        objWord = objWord.slice(0, len);
         localStorage.setItem('data', JSON.stringify(objWord));
         return objWord;
     } catch (err) {

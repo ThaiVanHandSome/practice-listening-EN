@@ -7,7 +7,7 @@ import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
 import getData from '~/data/vocabularySource';
 import randomSort from '~/utils/shuffle';
 import routes from '~/config/routes';
-import { Spinner } from 'reactstrap';
+import { Spinner, Collapse, CardBody, Card } from 'reactstrap';
 
 const cx = classNames.bind(styles);
 
@@ -19,14 +19,17 @@ function Test() {
     const [answers, setAnswers] = useState(savedAppState?.answers || []);
     const [pass, setPass] = useState(savedAppState?.pass !== undefined ? savedAppState?.pass : null);
     const [complete, setComplete] = useState(savedAppState?.complete || false);
-
+    const [isOpen, setIsOpen] = useState(false);
     const inpRef = useRef(null);
+    const wrapperRef = useRef(null);
 
     const [indexQuestion, setIndexQuestion] = useState(savedAppState?.indexQuestion || 0);
 
     const [voice, setVoice] = useState(savedAppState?.voice || null);
     const [isPaused, setIsPaused] = useState(false);
     const [utterance, setUtterance] = useState(null);
+
+    const toggle = () => setIsOpen(!isOpen);
 
     let { id } = useParams();
     const currWords = useMemo(() => {
@@ -60,7 +63,6 @@ function Test() {
             synth.resume();
         } else {
             utterance.voice = voice;
-            utterance.rate = 1.2;
             synth.speak(utterance);
         }
 
@@ -78,6 +80,7 @@ function Test() {
         setAnswers((prev) => [...prev, inpVal]);
         if (inpVal.toLowerCase().trim() !== listEnWords[indexQuestion].toLowerCase()) {
             setNumberOfWrong((prev) => {
+                inpRef.current.classList.add(`${cx('wrong')}`);
                 prev += 1;
                 if (prev === 3) {
                     setPass(false);
@@ -94,6 +97,7 @@ function Test() {
         setNumberOfWrong(0);
         setAnswers([]);
         setInpVal('');
+        setIsOpen(false);
     };
 
     const handleNext = () => {
@@ -113,7 +117,28 @@ function Test() {
     };
 
     const handleChange = (e) => {
+        if (e.target.classList.remove(`${cx('wrong')}`)) {
+            e.target.classList.remove(`${cx('wrong')}`);
+        }
         setInpVal(e.target.value);
+    };
+
+    const handleKeyDownNotice = (e) => {
+        console.log(e);
+        if (e.key === 'Enter') {
+            if (pass !== null) {
+                if (pass === true) {
+                    handleNext();
+                } else {
+                    handleAgain();
+                }
+            }
+        }
+        if (e.key === 'Control' || e.key === 'Ctrl') {
+            if (pass !== false) {
+                handlePlay();
+            }
+        }
     };
 
     useEffect(() => {
@@ -155,12 +180,18 @@ function Test() {
         console.log(payload);
         localStorage.setItem('testState', JSON.stringify(payload));
     });
+
+    useEffect(() => {
+        if (pass !== null) wrapperRef.current.focus();
+    }, [pass]);
     return (
-        <div className={cx('wrapper')}>
+        <div ref={wrapperRef} tabIndex={-1} onKeyDown={(e) => handleKeyDownNotice(e)} className={cx('wrapper')}>
             {words && (
                 <>
                     <span className={cx('lbl-warning')}>Mỗi câu hỏi bạn được phép trả lời tối đa 3 lần</span>
-                    <span className={cx('lbl-notice')}>Bạn còn {3 - numberOfWrong} lần thử</span>
+                    <span className={cx('lbl-notice')}>
+                        Bạn còn <span style={{ color: 'red' }}>{3 - numberOfWrong}</span> lần thử
+                    </span>
                     <div className={cx('container', 'container-question')}>
                         {pass && (
                             <FontAwesomeIcon
@@ -201,6 +232,20 @@ function Test() {
                                     icon={faVolumeHigh}
                                     onClick={handlePlay}
                                 />
+                                <div className={cx('help')}>
+                                    <button className={cx('btn-help')} onClick={toggle}>
+                                        Gợi ý
+                                    </button>
+                                    <Collapse isOpen={isOpen}>
+                                        <Card>
+                                            <CardBody>
+                                                <h1 style={{ fontSize: '2.2rem', opacity: '0.5', textAlign: 'center' }}>
+                                                    {currWords[listEnWords[indexQuestion]]}
+                                                </h1>
+                                            </CardBody>
+                                        </Card>
+                                    </Collapse>
+                                </div>
                                 <input
                                     ref={inpRef}
                                     value={inpVal}

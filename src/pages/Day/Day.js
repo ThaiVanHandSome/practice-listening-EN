@@ -18,6 +18,8 @@ function Day() {
         savedAppState = {};
     }
 
+    const wrapperRef = useRef(null);
+
     const [words, setWords] = useState(null);
 
     const [indexQuestion, setIndexQuestion] = useState(savedAppState?.indexQuestion || 0);
@@ -84,7 +86,6 @@ function Day() {
             synth.resume();
         } else {
             utterance.voice = voice;
-            utterance.rate = 1.2;
             synth.speak(utterance);
         }
 
@@ -144,8 +145,19 @@ function Day() {
         localStorage.setItem('dayState', JSON.stringify(payload));
     });
 
+    const handleKeyDownNotice = (e) => {
+        if (e.key === 'Control' || e.key === 'Ctrl') {
+            setCanShowAnswer(true);
+            handlePlay();
+        }
+    };
+
+    useEffect(() => {
+        wrapperRef.current.focus();
+    }, []);
+
     return (
-        <div className={cx('wrapper')}>
+        <div className={cx('wrapper')} ref={wrapperRef} tabIndex={-1} onKeyDown={(e) => handleKeyDownNotice(e)}>
             {!!words && (
                 <>
                     <div>
@@ -197,7 +209,10 @@ function Day() {
                         )}
                         {!complete && showAnswer && (
                             <div className={cx('answer-container')}>
-                                <h1 className="mb-3" style={{ fontSize: '5rem', textAlign: 'center' }}>
+                                <h1
+                                    className="mb-3"
+                                    style={{ fontSize: '8rem', textAlign: 'center', marginBottom: '64px' }}
+                                >
                                     {listEnWords[indexQuestion]}
                                 </h1>
                                 <div className={cx('list-btn-ans', 'd-flex')}>
