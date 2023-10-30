@@ -38,9 +38,6 @@ function Home() {
                     <Link to={'/translate'} className={cx('btn-translate')}>
                         TRANSLATE
                     </Link>
-                    <Link to={'/listen'} className={cx('btn-translate')}>
-                        LISTEN
-                    </Link>
                 </div>
             </div>
             {!words && (
