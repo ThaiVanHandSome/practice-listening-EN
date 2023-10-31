@@ -12,6 +12,8 @@ import { Spinner } from 'reactstrap';
 const cx = classNames.bind(styles);
 
 function TestVocabulary() {
+    const voices = window.speechSynthesis.getVoices();
+
     const savedAppState = JSON.parse(localStorage.getItem('testVocaState'));
 
     const [words, setWords] = useState(null);
@@ -26,9 +28,11 @@ function TestVocabulary() {
 
     const [indexQuestion, setIndexQuestion] = useState(savedAppState?.indexQuestion || 0);
 
-    const [voice, setVoice] = useState(savedAppState?.voice || null);
+    const [voice, setVoice] = useState(
+        savedAppState?.voiceName !== undefined ? voices.find((v) => v.name === savedAppState?.voiceName) : voices[0],
+    );
     const [isPaused, setIsPaused] = useState(false);
-    const [utterance, setUtterance] = useState(null);
+    const [utterance, setUtterance] = useState(savedAppState?.utterance || null);
 
     let { id } = useParams();
     const currWords = useMemo(() => {
@@ -68,7 +72,6 @@ function TestVocabulary() {
         setIsPaused(false);
     };
     const handleVoiceChange = (event) => {
-        const voices = window.speechSynthesis.getVoices();
         setVoice(voices.find((v) => v.name === event.target.value));
     };
 
@@ -154,11 +157,11 @@ function TestVocabulary() {
             pass,
             complete,
             indexQuestion,
-            voice,
+            voiceName: voice?.name,
             listEnWords,
+            utterance,
             start: true,
         };
-        console.log(payload);
         localStorage.setItem('testVocaState', JSON.stringify(payload));
     });
 

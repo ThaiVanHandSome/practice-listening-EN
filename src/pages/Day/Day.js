@@ -13,6 +13,7 @@ import { Spinner } from 'reactstrap';
 const cx = classNames.bind(styles);
 
 function Day() {
+    const voices = window.speechSynthesis.getVoices();
     let savedAppState = JSON.parse(localStorage.getItem('dayState'));
     if (!savedAppState) {
         savedAppState = {};
@@ -23,7 +24,9 @@ function Day() {
     const [words, setWords] = useState(null);
 
     const [indexQuestion, setIndexQuestion] = useState(savedAppState?.indexQuestion || 0);
-    const [voice, setVoice] = useState(savedAppState?.voice || null);
+    const [voice, setVoice] = useState(
+        savedAppState?.voiceName !== undefined ? voices.find((v) => v.name === savedAppState?.voiceName) : voices[0],
+    );
     const [showAnswer, setShowAnswer] = useState(savedAppState?.showAnswer || false);
     const [canShowAnswer, setCanShowAnswer] = useState(savedAppState?.canShowAnswer || false);
     const [isOpen, setIsOpen] = useState(savedAppState?.isOpen || false);
@@ -93,7 +96,6 @@ function Day() {
     };
 
     const handleVoiceChange = (event) => {
-        const voices = window.speechSynthesis.getVoices();
         setVoice(voices.find((v) => v.name === event.target.value));
     };
 
@@ -139,7 +141,7 @@ function Day() {
             isOpen,
             complete,
             utterance,
-            voice,
+            voiceName: voice?.name,
             start: true,
         };
         localStorage.setItem('dayState', JSON.stringify(payload));

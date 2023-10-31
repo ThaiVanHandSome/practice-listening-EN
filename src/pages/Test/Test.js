@@ -12,6 +12,7 @@ import { Spinner, Collapse, CardBody, Card } from 'reactstrap';
 const cx = classNames.bind(styles);
 
 function Test() {
+    const voices = window.speechSynthesis.getVoices();
     const savedAppState = JSON.parse(localStorage.getItem('testState'));
     const [words, setWords] = useState(null);
     const [inpVal, setInpVal] = useState(savedAppState?.inpVal || '');
@@ -25,9 +26,11 @@ function Test() {
 
     const [indexQuestion, setIndexQuestion] = useState(savedAppState?.indexQuestion || 0);
 
-    const [voice, setVoice] = useState(savedAppState?.voice || null);
+    const [voice, setVoice] = useState(
+        savedAppState?.voiceName !== undefined ? voices.find((v) => v.name === savedAppState?.voiceName) : voices[0],
+    );
     const [isPaused, setIsPaused] = useState(false);
-    const [utterance, setUtterance] = useState(null);
+    const [utterance, setUtterance] = useState(savedAppState?.utterance || null);
 
     const toggle = () => setIsOpen(!isOpen);
 
@@ -69,7 +72,6 @@ function Test() {
         setIsPaused(false);
     };
     const handleVoiceChange = (event) => {
-        const voices = window.speechSynthesis.getVoices();
         setVoice(voices.find((v) => v.name === event.target.value));
     };
 
@@ -124,7 +126,6 @@ function Test() {
     };
 
     const handleKeyDownNotice = (e) => {
-        console.log(e);
         if (e.key === 'Enter') {
             if (pass !== null) {
                 if (pass === true) {
@@ -173,11 +174,10 @@ function Test() {
             pass,
             complete,
             indexQuestion,
-            voice,
             listEnWords,
+            voiceName: voice?.name,
             start: true,
         };
-        console.log(payload);
         localStorage.setItem('testState', JSON.stringify(payload));
     });
 
