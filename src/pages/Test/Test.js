@@ -227,6 +227,20 @@ function Test() {
                                 </div>
                             </div>
                         </div>
+                        <div className={cx('help')}>
+                            <button className={cx('btn-help')} onClick={toggle}>
+                                {pass === null ? 'Gợi ý' : 'Dịch'}
+                            </button>
+                            <Collapse isOpen={isOpen}>
+                                <Card>
+                                    <CardBody>
+                                        <h1 style={{ fontSize: '2.2rem', opacity: '0.5', textAlign: 'center' }}>
+                                            {currWords[listEnWords[indexQuestion]]}
+                                        </h1>
+                                    </CardBody>
+                                </Card>
+                            </Collapse>
+                        </div>
                         {pass === null && (
                             <>
                                 <FontAwesomeIcon
@@ -234,20 +248,7 @@ function Test() {
                                     icon={faVolumeHigh}
                                     onClick={handlePlay}
                                 />
-                                <div className={cx('help')}>
-                                    <button className={cx('btn-help')} onClick={toggle}>
-                                        Gợi ý
-                                    </button>
-                                    <Collapse isOpen={isOpen}>
-                                        <Card>
-                                            <CardBody>
-                                                <h1 style={{ fontSize: '2.2rem', opacity: '0.5', textAlign: 'center' }}>
-                                                    {currWords[listEnWords[indexQuestion]]}
-                                                </h1>
-                                            </CardBody>
-                                        </Card>
-                                    </Collapse>
-                                </div>
+
                                 <input
                                     ref={inpRef}
                                     value={inpVal}
