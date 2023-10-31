@@ -170,7 +170,9 @@ function TestVocabulary() {
         if (e.key === 'Enter') {
             if (pass !== null) {
                 if (pass === true) {
-                    handleNext();
+                    if (indexQuestion !== listEnWords.length - 1) {
+                        handleNext();
+                    }
                 } else {
                     handleAgain();
                 }
