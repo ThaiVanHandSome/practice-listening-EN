@@ -8,6 +8,10 @@ import getData from '~/data/vocabularySource';
 const cx = classNames.bind(styles);
 function Home() {
     const [words, setWords] = useState(null);
+    let listSuccess = localStorage.getItem('listSuccess');
+    if (!listSuccess) {
+        listSuccess = [];
+    }
     // console.log(typeof words);
     useEffect(() => {
         const getVocabulary = async () => {
@@ -27,7 +31,13 @@ function Home() {
             <div className={cx('container', 'mt-lg-0')}>
                 {!!words &&
                     words.map((_, index) => (
-                        <Link className={cx('btn')} key={index} to={`/day/${index}`}>
+                        <Link
+                            className={cx('btn', {
+                                complete: listSuccess.includes(index),
+                            })}
+                            key={index}
+                            to={`/day/${index}`}
+                        >
                             Day {index + 1}
                         </Link>
                     ))}

@@ -36,6 +36,9 @@
     -webkit-user-select: none;
     touch-action: manipulation;
     margin-bottom: 24px;
+    &.complete {
+        background-color: rgb(75, 206, 75);
+    }
 }
 
 .btn:active {

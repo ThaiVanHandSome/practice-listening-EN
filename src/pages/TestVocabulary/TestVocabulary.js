@@ -15,6 +15,10 @@ function TestVocabulary() {
     const voices = window.speechSynthesis.getVoices();
 
     const savedAppState = JSON.parse(localStorage.getItem('testVocaState'));
+    let listSuccess = JSON.parse(localStorage.getItem('listSuccess'));
+    if (!listSuccess) {
+        listSuccess = [];
+    }
 
     const [words, setWords] = useState(null);
     const [inpVal, setInpVal] = useState(savedAppState?.inpVal || '');
@@ -22,6 +26,9 @@ function TestVocabulary() {
     const [answers, setAnswers] = useState(savedAppState?.answers || []);
     const [pass, setPass] = useState(savedAppState?.pass !== undefined ? savedAppState?.pass : null);
     const [complete, setComplete] = useState(savedAppState?.complete || false);
+
+    const [everFalse, setEverFalse] = useState(savedAppState?.everFalse || false);
+    const [numberOfAgain, setNumberOfAgain] = useState(savedAppState?.numberOfAgain || 5);
 
     const inpRef = useRef(null);
     const wrapperRef = useRef(null);
@@ -76,21 +83,33 @@ function TestVocabulary() {
     };
 
     const handleSubmit = () => {
-        if (indexQuestion === listEnWords.length - 1) {
-            setComplete(true);
-        }
         setAnswers((prev) => [...prev, inpVal]);
         if (inpVal.toLowerCase().trim() !== listEnWords[indexQuestion].toLowerCase()) {
             setNumberOfWrong((prev) => {
                 inpRef.current.classList.add(`${cx('wrong')}`);
                 prev += 1;
                 if (prev === 3) {
+                    setEverFalse(true);
+                    setNumberOfAgain(5);
                     setPass(false);
                 }
                 return prev;
             });
         } else {
-            setPass(true);
+            if (!everFalse || numberOfAgain === 1) {
+                if (indexQuestion === listEnWords.length - 1) {
+                    setComplete(true);
+                    if (!listSuccess.includes(id)) listSuccess.push(id);
+                    localStorage.setItem('listSuccess', JSON.stringify(listSuccess));
+                }
+                setPass(true);
+                setEverFalse(false);
+                setNumberOfAgain(5);
+            } else {
+                setInpVal('');
+                setNumberOfWrong(0);
+                setNumberOfAgain((prev) => prev - 1);
+            }
         }
     };
 
@@ -121,6 +140,14 @@ function TestVocabulary() {
         if (e.keyCode === 13) {
             handleSubmit();
         }
+    };
+
+    const handleCopy = (event) => {
+        event.preventDefault();
+    };
+
+    const handlePaste = (event) => {
+        event.preventDefault();
     };
 
     useEffect(() => {
@@ -160,9 +187,12 @@ function TestVocabulary() {
             voiceName: voice?.name,
             listEnWords,
             utterance,
+            everFalse,
+            numberOfAgain,
             start: true,
         };
         localStorage.setItem('testVocaState', JSON.stringify(payload));
+        localStorage.setItem('listSuccess', JSON.stringify(listSuccess));
     });
 
     const handleKeyDownNotice = (e) => {
@@ -201,7 +231,18 @@ function TestVocabulary() {
             {!!words && (
                 <>
                     <span className={cx('lbl-warning')}>Mỗi câu hỏi bạn được phép trả lời tối đa 3 lần</span>
-                    <span className={cx('lbl-notice')}>Bạn còn {3 - numberOfWrong} lần thử</span>
+                    <span className={cx('lbl-notice')}>
+                        Bạn còn <span className={cx('cnt')}>{3 - numberOfWrong}</span> lần thử
+                    </span>
+                    {everFalse && (
+                        <span className={cx('lbl-notice')}>
+                            Bạn phải nhập đúng từ này{' '}
+                            <span className={cx('cnt')} style={{ color: 'red' }}>
+                                {numberOfAgain}
+                            </span>{' '}
+                            lần thì mới qua được câu hỏi tiếp theo
+                        </span>
+                    )}
                     <div className={cx('container', 'container-question')}>
                         {pass && (
                             <FontAwesomeIcon
@@ -244,6 +285,8 @@ function TestVocabulary() {
                                     type="text"
                                     className={cx('inp-ans')}
                                     placeholder="Enter your answer..."
+                                    onCopy={handleCopy}
+                                    onPaste={handlePaste}
                                     onChange={handleChange}
                                     onKeyDown={(e) => handleKeyDown(e)}
                                 />
@@ -267,7 +310,7 @@ function TestVocabulary() {
                                 >
                                     {complete ? 'HOÀN THÀNH' : pass ? 'THÀNH CÔNG' : 'THẤT BẠI'}
                                 </h1>
-                                <h1 className={cx('true-ans')}>{listEnWords[indexQuestion]}</h1>
+                                <h1 className={cx('true-ans')}>{listEnWords[indexQuestion].toLowerCase()}</h1>
                                 {pass === false && (
                                     <ul className={cx('list-anss')}>
                                         {answers.map((text, index) => (

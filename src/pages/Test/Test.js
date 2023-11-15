@@ -14,6 +14,10 @@ const cx = classNames.bind(styles);
 function Test() {
     const voices = window.speechSynthesis.getVoices();
     const savedAppState = JSON.parse(localStorage.getItem('testState'));
+    let listSuccess = JSON.parse(localStorage.getItem('listSuccess'));
+    if (!listSuccess) {
+        listSuccess = [];
+    }
     const [words, setWords] = useState(null);
     const [inpVal, setInpVal] = useState(savedAppState?.inpVal || '');
     const [numberOfWrong, setNumberOfWrong] = useState(savedAppState?.numberOfWrong || 0);
@@ -76,11 +80,8 @@ function Test() {
     };
 
     const handleSubmit = () => {
-        if (indexQuestion === listEnWords.length - 1) {
-            setComplete(true);
-        }
         setAnswers((prev) => [...prev, inpVal]);
-        if (inpVal.toLowerCase().trim() !== listEnWords[indexQuestion].toLowerCase()) {
+        if (inpVal.toLowerCase().trim() === listEnWords[indexQuestion].toLowerCase()) {
             setNumberOfWrong((prev) => {
                 inpRef.current.classList.add(`${cx('wrong')}`);
                 prev += 1;
@@ -90,6 +91,11 @@ function Test() {
                 return prev;
             });
         } else {
+            if (indexQuestion === listEnWords.length - 1) {
+                setComplete(true);
+                if (!listSuccess.includes(id)) listSuccess.push(id);
+                localStorage.setItem('listSuccess', JSON.stringify(listSuccess));
+            }
             setPass(true);
         }
     };
@@ -194,6 +200,7 @@ function Test() {
                     <span className={cx('lbl-notice')}>
                         Bạn còn <span style={{ color: 'red' }}>{3 - numberOfWrong}</span> lần thử
                     </span>
+
                     <div className={cx('container', 'container-question')}>
                         {pass && (
                             <FontAwesomeIcon

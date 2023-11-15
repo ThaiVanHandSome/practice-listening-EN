@@ -1,5 +1,5 @@
 const data = localStorage.getItem('data');
-const len = 19;
+const len = 30;
 const readVocabularyFile = async (url) => {
     return new Promise((resolve, reject) => {
         try {
