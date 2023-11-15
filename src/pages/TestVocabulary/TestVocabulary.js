@@ -16,7 +16,7 @@ function TestVocabulary() {
 
     const savedAppState = JSON.parse(localStorage.getItem('testVocaState'));
     let listSuccess = JSON.parse(localStorage.getItem('listSuccess'));
-    if (!listSuccess) {
+    if (typeof listSuccess !== 'object' || !listSuccess) {
         listSuccess = [];
     }
 
@@ -99,7 +99,7 @@ function TestVocabulary() {
             if (!everFalse || numberOfAgain === 1) {
                 if (indexQuestion === listEnWords.length - 1) {
                     setComplete(true);
-                    if (!listSuccess.includes(id)) listSuccess.push(id);
+                    if (!listSuccess.includes(parseInt(id))) listSuccess.push(parseInt(id));
                     localStorage.setItem('listSuccess', JSON.stringify(listSuccess));
                 }
                 setPass(true);

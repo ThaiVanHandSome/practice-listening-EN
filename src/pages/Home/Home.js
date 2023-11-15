@@ -8,7 +8,7 @@ import getData from '~/data/vocabularySource';
 const cx = classNames.bind(styles);
 function Home() {
     const [words, setWords] = useState(null);
-    let listSuccess = localStorage.getItem('listSuccess');
+    let listSuccess = JSON.parse(localStorage.getItem('listSuccess'));
     if (!listSuccess) {
         listSuccess = [];
     }
