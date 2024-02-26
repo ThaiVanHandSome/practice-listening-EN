@@ -7,6 +7,7 @@ const routes = {
     testVocabulary: '/testvocabulary/:id',
     listen: '/listen/:q',
     listenAll: '/listen',
+    review: '/review/:id',
 };
 
 export default routes;

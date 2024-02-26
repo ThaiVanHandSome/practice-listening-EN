@@ -28,7 +28,7 @@ function TestVocabulary() {
     const [complete, setComplete] = useState(savedAppState?.complete || false);
 
     const [everFalse, setEverFalse] = useState(savedAppState?.everFalse || false);
-    const [numberOfAgain, setNumberOfAgain] = useState(savedAppState?.numberOfAgain || 5);
+    const [numberOfAgain, setNumberOfAgain] = useState(savedAppState?.numberOfAgain || 3);
 
     const inpRef = useRef(null);
     const wrapperRef = useRef(null);
@@ -90,7 +90,7 @@ function TestVocabulary() {
                 prev += 1;
                 if (prev === 3) {
                     setEverFalse(true);
-                    setNumberOfAgain(5);
+                    setNumberOfAgain(3);
                     setPass(false);
                 }
                 return prev;
@@ -104,7 +104,7 @@ function TestVocabulary() {
                 }
                 setPass(true);
                 setEverFalse(false);
-                setNumberOfAgain(5);
+                setNumberOfAgain(3);
             } else {
                 setInpVal('');
                 setNumberOfWrong(0);

@@ -6,6 +6,7 @@ import Translate from '~/pages/Translate';
 import Test from '~/pages/Test';
 import TestVocabulary from '~/pages/TestVocabulary';
 import Listen from '~/pages/Listen';
+import Review from '~/pages/Review';
 
 const publicRoutes = [
     {
@@ -39,6 +40,10 @@ const publicRoutes = [
     {
         path: routes.listen,
         Component: Listen,
+    },
+    {
+        path: routes.review,
+        Component: Review,
     },
 ];
 

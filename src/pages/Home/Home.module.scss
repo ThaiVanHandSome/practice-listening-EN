@@ -53,6 +53,24 @@
     }
 }
 
+.icons-state {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+
+    .icons-state-item {
+        margin-right: 8px;
+        font-size: 2rem;
+
+        &.success {
+            color: rgb(75, 206, 75);
+        }
+    }
+}
+
 .label-json,
 .label-excel,
 .label-sql {
