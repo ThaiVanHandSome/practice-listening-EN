@@ -81,7 +81,7 @@ function Test() {
 
     const handleSubmit = () => {
         setAnswers((prev) => [...prev, inpVal]);
-        if (inpVal.toLowerCase().trim() === listEnWords[indexQuestion].toLowerCase()) {
+        if (inpVal.toLowerCase().trim() !== listEnWords[indexQuestion].toLowerCase()) {
             setNumberOfWrong((prev) => {
                 inpRef.current.classList.add(`${cx('wrong')}`);
                 prev += 1;
@@ -196,7 +196,7 @@ function Test() {
         <div ref={wrapperRef} tabIndex={-1} onKeyDown={(e) => handleKeyDownNotice(e)} className={cx('wrapper')}>
             {words && (
                 <>
-                    <span className={cx('lbl-warning')}>Mỗi câu hỏi bạn được phép trả lời tối đa 3 lần</span>
+                    <span className={cx('lbl-warning', 'text-center')}>Mỗi câu hỏi bạn được phép trả lời tối đa 3 lần</span>
                     <span className={cx('lbl-notice')}>
                         Bạn còn <span style={{ color: 'red' }}>{3 - numberOfWrong}</span> lần thử
                     </span>

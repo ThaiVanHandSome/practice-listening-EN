@@ -31,7 +31,9 @@ function Home() {
             <div className={cx('container', 'mt-lg-0')}>
                 {!!words &&
                     words.map((_, index) => (
-                        <Link className={cx('btn')} key={index} to={`/day/${index}`}>
+                        <Link className={cx('btn', {
+                            'disable': index === 6
+                        })} key={index} to={`/day/${index}`}>
                             Day {index + 1}
                             <div className={cx('icons-state')}>
                                 <FontAwesomeIcon

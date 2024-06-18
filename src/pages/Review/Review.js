@@ -147,16 +147,15 @@ function Review() {
                         )}
                     </div>
                     <div className={cx('list-btn', 'flex-column', 'flex-lg-row')}>
-                        <button className={cx('btn', 'me-lg-4')} onClick={handleNextQuestion}>
-                            Next Question
-                        </button>
-
-                        <button className={cx('btn', 'me-lg-4')} onClick={handlePrevQuestion}>
-                            Previous Question
-                        </button>
                         <Link className={cx('btn', 'me-lg-4')} to={routes.home}>
                             Back To Home
                         </Link>
+                        <button className={cx('btn', 'me-lg-4')} onClick={handlePrevQuestion}>
+                            Previous Question
+                        </button>
+                        <button className={cx('btn', 'me-lg-4')} onClick={handleNextQuestion}>
+                            Next Question
+                        </button>
                     </div>
                 </>
             )}

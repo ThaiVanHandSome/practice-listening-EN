@@ -230,12 +230,12 @@ function TestVocabulary() {
         <div ref={wrapperRef} tabIndex={-1} onKeyDown={(e) => handleKeyDownNotice(e)} className={cx('wrapper')}>
             {!!words && (
                 <>
-                    <span className={cx('lbl-warning')}>Mỗi câu hỏi bạn được phép trả lời tối đa 3 lần</span>
+                    <span className={cx('lbl-warning', 'text-center')}>Mỗi câu hỏi bạn được phép trả lời tối đa 3 lần</span>
                     <span className={cx('lbl-notice')}>
                         Bạn còn <span className={cx('cnt')}>{3 - numberOfWrong}</span> lần thử
                     </span>
                     {everFalse && (
-                        <span className={cx('lbl-notice')}>
+                        <span className={cx('lbl-notice', 'text-center')}>
                             Bạn phải nhập đúng từ này{' '}
                             <span className={cx('cnt')} style={{ color: 'red' }}>
                                 {numberOfAgain}

@@ -160,7 +160,7 @@ function Day() {
         <div className={cx('wrapper')} ref={wrapperRef} tabIndex={-1} onKeyDown={(e) => handleKeyDownNotice(e)}>
             {!!words && (
                 <>
-                    <div>
+                    <div className='d-flex flex-column flex-lg-row'>
                         <Link to={`/test/${idVal}`} className={cx('btn', 'me-lg-4')}>
                             TEST LISTENING
                         </Link>
