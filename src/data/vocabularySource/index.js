@@ -1,3 +1,5 @@
+import handleTranslate from "~/services/apiServices/translate";
+
 const data = localStorage.getItem('data');
 const len = 30;
 const readVocabularyFile = async (url) => {
@@ -5,13 +7,20 @@ const readVocabularyFile = async (url) => {
         try {
             fetch(url)
                 .then((res) => res.text())
-                .then((data) => {
+                .then(async (data) => {
                     const listWord = data.split('\n');
                     const words = {};
-                    for (let j = 0; j < listWord.length - 1; j += 2) {
+                    let j = 0;
+                    while(j < listWord.length - 1) {
                         listWord[j] = listWord[j].replace(/\r/g, '');
                         listWord[j + 1] = listWord[j + 1].replace(/\r/g, '');
-                        words[listWord[j]] = listWord[j + 1];
+                        if ((listWord[j+1][0] >= 'a' && listWord[j+1][0] <= 'z')) {
+                            words[listWord[j]] = listWord[j + 1];
+                            j+=2;
+                        } else {
+                            const res = await handleTranslate(listWord[j]);
+                            words[listWord[j]] = res;
+                        }
                     }
                     resolve(words);
                 });

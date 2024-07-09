@@ -4,14 +4,19 @@ import { Link, useParams } from 'react-router-dom';
 import { useEffect, useMemo, useState } from 'react';
 import randomSort from '~/utils/shuffle';
 import getData from '~/data/vocabularySource';
-import { Card, CardBody, Collapse, Spinner } from 'reactstrap';
+import { Button, Card, CardBody, Collapse, Spinner } from 'reactstrap';
 import routes from '~/config/routes';
 
 const cx = classNames.bind(styles);
 
 function Review() {
     let { id } = useParams();
-    let savedAppState = JSON.parse(localStorage.getItem('reviewState'));
+    let savedAppState;
+    if(id === "all") {
+        savedAppState = JSON.parse(localStorage.getItem('reviewStateAll'));
+    } else {
+        savedAppState = JSON.parse(localStorage.getItem('reviewState'));
+    }
     if (!savedAppState) {
         savedAppState = {};
     }
@@ -20,7 +25,17 @@ function Review() {
         listReviewSuccess = [];
     }
     const [words, setWords] = useState(null);
-    const [indexQuestion, setIndexQuestion] = useState(savedAppState?.indexQuestion || 0);
+    const [indexQuestion, setIndexQuestion] = useState(() => {
+        if(localStorage.getItem("currIndex")) {
+            const idx = localStorage.getItem("currIndex");
+            localStorage.removeItem("currIndex");
+            return idx;
+        }
+        if(savedAppState?.indexQuestion) {
+            return savedAppState?.indexQuestion;
+        }
+        return 0;
+    });
     const [isOpen, setIsOpen] = useState(savedAppState?.isOpen || false);
     const [complete, setComplete] = useState(savedAppState?.complete || false);
     const toggle = () => setIsOpen(!isOpen);
@@ -28,11 +43,14 @@ function Review() {
         let objChoosen = {};
         if (words !== null) {
             if (id === 'all') {
-                words.forEach((item) => {
-                    objChoosen = {
-                        ...objChoosen,
-                        ...item,
-                    };
+                words.forEach((item, index) => {
+                    if(index !== 6) {
+                        console.table(item);
+                        objChoosen = {
+                            ...objChoosen,
+                            ...item,
+                        };
+                    }
                 });
             } else {
                 objChoosen = words[id];
@@ -46,6 +64,10 @@ function Review() {
     }, [currWords]);
     if (savedAppState?.start === true && savedAppState?.listEnWords.length !== 0) {
         listEnWords = savedAppState.listEnWords;
+    }
+    if(localStorage.getItem("currReview")) {
+        listEnWords = JSON.parse(localStorage.getItem("currReview"));
+        localStorage.removeItem("currReview");
     }
 
     const handleNextQuestion = () => {
@@ -72,6 +94,11 @@ function Review() {
         });
     };
 
+    const handleSave = () => {
+        localStorage.setItem("currReview", JSON.stringify(listEnWords));
+        localStorage.setItem("currIndex", indexQuestion);
+    }
+
     useEffect(() => {
         const getVocabulary = async () => {
             const data = await getData();
@@ -88,7 +115,11 @@ function Review() {
             complete,
             start: true,
         };
-        localStorage.setItem('reviewState', JSON.stringify(payload));
+        if(id === "all") {
+            localStorage.setItem('reviewStateAll', JSON.stringify(payload));
+        } else {
+            localStorage.setItem('reviewState', JSON.stringify(payload));
+        }
     });
     return (
         <div className={cx('wrapper')}>
@@ -147,6 +178,7 @@ function Review() {
                         )}
                     </div>
                     <div className={cx('list-btn', 'flex-column', 'flex-lg-row')}>
+                        <Button style={{fontSize: "24px"}} className={cx('btn', 'me-lg-4')} onClick={handleSave}>Lưu</Button>
                         <Link className={cx('btn', 'me-lg-4')} to={routes.home}>
                             Back To Home
                         </Link>

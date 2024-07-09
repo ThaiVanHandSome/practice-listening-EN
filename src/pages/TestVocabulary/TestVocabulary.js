@@ -14,7 +14,13 @@ const cx = classNames.bind(styles);
 function TestVocabulary() {
     const voices = window.speechSynthesis.getVoices();
 
-    const savedAppState = JSON.parse(localStorage.getItem('testVocaState'));
+    let savedAppState = {};
+    let { id } = useParams();
+    if(id === "all") {
+        savedAppState = JSON.parse(localStorage.getItem('testVocaStateAll'));
+    } else {
+        savedAppState = JSON.parse(localStorage.getItem('testVocaState'));
+    }
     let listSuccess = JSON.parse(localStorage.getItem('listSuccess'));
     if (typeof listSuccess !== 'object' || !listSuccess) {
         listSuccess = [];
@@ -41,7 +47,6 @@ function TestVocabulary() {
     const [isPaused, setIsPaused] = useState(false);
     const [utterance, setUtterance] = useState(savedAppState?.utterance || null);
 
-    let { id } = useParams();
     const currWords = useMemo(() => {
         let objChoosen = {};
         if (words !== null) {
@@ -191,7 +196,11 @@ function TestVocabulary() {
             numberOfAgain,
             start: true,
         };
-        localStorage.setItem('testVocaState', JSON.stringify(payload));
+        if(id === "all") {
+            localStorage.setItem('testVocaStateAll', JSON.stringify(payload));
+        } else {
+            localStorage.setItem('testVocaState', JSON.stringify(payload));
+        }
         localStorage.setItem('listSuccess', JSON.stringify(listSuccess));
     });
 
