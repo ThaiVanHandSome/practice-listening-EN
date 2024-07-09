@@ -178,7 +178,7 @@ function Review() {
                         )}
                     </div>
                     <div className={cx('list-btn', 'flex-column', 'flex-lg-row')}>
-                        <Button style={{fontSize: "24px"}} className={cx('btn', 'me-lg-4')} onClick={handleSave}>Lưu</Button>
+                        {/* <Button style={{fontSize: "24px"}} className={cx('btn', 'me-lg-4')} onClick={handleSave}>Lưu</Button> */}
                         <Link className={cx('btn', 'me-lg-4')} to={routes.home}>
                             Back To Home
                         </Link>
