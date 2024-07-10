@@ -12,8 +12,16 @@ import { Spinner, Collapse, CardBody, Card } from 'reactstrap';
 const cx = classNames.bind(styles);
 
 function Test() {
+
+    let { id } = useParams();
+
     const voices = window.speechSynthesis.getVoices();
-    const savedAppState = JSON.parse(localStorage.getItem('testState'));
+    let savedAppState;
+    if(id === "all") {
+        savedAppState = JSON.parse(localStorage.getItem('testStateAll'));
+    } else {
+        savedAppState = JSON.parse(localStorage.getItem('testState'));
+    }
     let listSuccess = JSON.parse(localStorage.getItem('listSuccess'));
     if (!listSuccess) {
         listSuccess = [];
@@ -38,7 +46,6 @@ function Test() {
 
     const toggle = () => setIsOpen(!isOpen);
 
-    let { id } = useParams();
     const currWords = useMemo(() => {
         let objChoosen = {};
         if (words !== null) {
@@ -186,7 +193,11 @@ function Test() {
             voiceName: voice?.name,
             start: true,
         };
-        localStorage.setItem('testState', JSON.stringify(payload));
+        if(id === "all") {
+            localStorage.setItem('testStateAll', JSON.stringify(payload));
+        } else {
+            localStorage.setItem('testState', JSON.stringify(payload));
+        }
     });
 
     useEffect(() => {
